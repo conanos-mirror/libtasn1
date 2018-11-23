@@ -9,6 +9,7 @@ class Libtasn1Conan(ConanFile):
     url = "https://github.com/conanos/libtasn1"
     homepage = "http://www.gnu.org/software/libtasn1/"
     license = "LGPLv2_1Plus"
+    exports_sources = ["CMakeLists.txt",'cmake/*']
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
