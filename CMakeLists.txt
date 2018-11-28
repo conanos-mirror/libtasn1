@@ -28,8 +28,13 @@ add_definitions(-DHAVE_CONFIG_H
 	-D_GL_ATTRIBUTE_PURE=
     )
 
-FILE(GLOB LIBTANSN1_SOURCES "${LIBTASN1_PROJECT_DIR}/lib/*.[hc]") 
-add_library(libtasn1  STATIC ${LIBTANSN1_SOURCES})
+FILE(GLOB LIBTANSN1_SOURCES "${LIBTASN1_PROJECT_DIR}/lib/*.[hc]")
+set(LIBTANSN1_SOURCES ${LIBTANSN1_SOURCES}
+    ${LIBTASN1_PROJECT_DIR}/lib/gllib/hash-pjw-bare.c
+	${LIBTASN1_PROJECT_DIR}/lib/gllib/strverscmp.c
+	)
+	 
+add_library(libtasn1 ${LIBTANSN1_SOURCES})
 assign_source_group(${LIBTANSN1_SOURCES})
 
 install(FILES ${LIBTASN1_PROJECT_DIR}/lib/libtasn1.h DESTINATION include)
