@@ -9,6 +9,7 @@ class Libtasn1Conan(ConanFile):
     url = "https://github.com/conanos/libtasn1"
     homepage = "http://www.gnu.org/software/libtasn1/"
     license = "LGPLv2_1Plus"
+    exports_sources = ["CMakeLists.txt",'cmake/*']
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
@@ -22,6 +23,24 @@ class Libtasn1Conan(ConanFile):
         os.rename(extracted_dir, self.source_subfolder)
 
     def build(self):
+        if self.settings.compiler == 'Visual Studio':
+            self.msvc_build()
+        else:
+            self.gcc_build()
+
+    def msvc_build(self):
+        LIBTASN1_PROJECT_DIR = os.path.abspath(self.source_subfolder).replace('\\','/')
+        cmake = CMake(self)
+        cmake.configure(build_folder='~build',
+        defs={'USE_CONAN_IO':True,
+            'LIBTASN1_PROJECT_DIR':LIBTASN1_PROJECT_DIR,            
+            'ENABLE_UNIT_TESTS':'ON' if os.environ.get('CONANOS_BUILD_TESTS') else 'OFF'
+        })
+        cmake.build()
+        #cmake.test()
+        cmake.install()
+
+    def gcc_build(self):
         with tools.chdir(self.source_subfolder):
             self.run("autoreconf -f -i")
 
